@@ -1,23 +1,45 @@
 from tkinter import *
+from num2words import num2words    # pip3 install num2words
+import tempfile
+import os
+from datetime import date
+import time
+
+
 root = Tk()
 root.geometry('500x500')
 root.title("Sonu")
+
+srno = 0
+today = date.today().strftime('%d/%m/%Y')
+ttime = time.strftime("%H:%M")
 
 def reciept():
     top = Toplevel()
     top.geometry("500x500")
     top.config(background='white')
-    print("hello")
-    name = entry_1.get()
-    bank = entry_2.get()
+    print("i am sonu.")
+    name = entry_1.get().upper() 
+    bank = entry_2.get().upper() 
     account = entry_3.get()
     amount = entry_4.get()
+    amountword = num2words(amount).upper()
     mobile = entry_5.get()
 
     l = Label(top, text="============RECIEPT============")
     l.pack()
     l.place(x = 30, y = 10)
     l.config(background="white")
+
+    ll = Label(top, text=f"Sr.No.: {str(srno)}")
+    ll.pack()
+    ll.place(x = 40, y = 30)
+    ll.config(background="white")
+
+    lll = Label(top, text=f"Date: {today} {ttime}")
+    lll.pack()
+    lll.place(x = 200, y = 30)
+    lll.config(background="white")
 
     item1 = Label(top, text='Receiver Name :')
     item1.pack()
@@ -50,7 +72,7 @@ def reciept():
     item4.pack()
     item4.place(x = 40, y = 180)
     item4.config(background="white")
-    item40 = Label(top, text=amount)
+    item40 = Label(top, text=f"{amount}.0")
     item40.pack()
     item40.place(x = 200, y = 180)
     item40.config(background="white")
@@ -59,7 +81,7 @@ def reciept():
     item5.pack()
     item5.place(x = 40, y = 220)
     item5.config(background="white")
-    item50 = Label(top, text=amount)
+    item50 = Label(top, text= f"{amountword}(s)")
     item50.pack()
     item50.place(x = 200, y = 220)
     item50.config(background="white")
@@ -73,6 +95,27 @@ def reciept():
     item10.place(x = 200, y = 260)
     item10.config(background="white")
 
+def iprint():
+    global srno
+    name = entry_1.get().upper()  
+    bank = entry_2.get().upper() 
+    account = entry_3.get()
+    amount = entry_4.get()
+    amountword = num2words(amount).upper() 
+    mobile = entry_5.get()
+    filename = tempfile.mktemp(".txt")
+    # filename = "temp5.txt"
+    with open (filename, "w") as fl:
+        fl.writelines("============RECEIPT============\n")
+        fl.writelines(f"Sr.No.: {str(srno)}      Date: {today} {ttime}\n")
+        fl.writelines(f"Receiver Name :    {name}\n")
+        fl.writelines(f"Bank Name :        {bank}\n")
+        fl.writelines(f"Account No. :      {account}\n")
+        fl.writelines(f"Amount :           {amount}.0\n")
+        fl.writelines(f"Amount in words :  {amountword}(s)\n")
+        fl.writelines(f"Mobile :           {mobile}\n")
+    srno += 1
+    # os.startfile(filename, "print")      #for windows
 
 
 label_0 = Label(root, text="Money Transfer",width=20,font=("bold", 20))
@@ -105,6 +148,8 @@ entry_5 = Entry(root)
 entry_5.place(x=240,y=300)
 
 
-Button(root, text='Submit',width=20,bg='brown',fg='white',command=reciept).place(x=180,y=380)
+Button(root, text='Show',width=15,bg='brown',fg='white',command=reciept).place(x=100,y=380)
+Button(root, text='Print',width=15,bg='brown',fg='white',command=iprint).place(x=280,y=380)
+
 
 root.mainloop()
